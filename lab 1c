@@ -13,22 +13,13 @@ raw = [
     "0829003df52058a155c90553e9cc2cdc646f46a233f34347d542e8159e49713faad9a3a74753116ffb90484937468f6f9525bf28f2aaafe542b317080bc5e970829dc5287c8be8e130176d798bf6445aa34f1539121efbd56fe590d6374acaabbb725486ff4939a2e9394cb6957c56b4fd5798002ecccf00350445bc033eb8d79dc007fb2240f2afbbd3ec2b704f9b",
     "0f351c71c7654ff251de056ea68920cf2d7d49e53ff9174bd303fc04d74e7e69ad9cb9bf56160c2aea960d002b139b6b8f25982fe2e6e9f158a2451944c3f623d19dc425648beceb621f38768abb4f47ad46176b7b04b3c069a0c4da3b0dd3bea96a54b7e4453989f86b55ba8b635b90f9442019",
 ]
-
-# Step 1: Convert raw hex strings into byte arrays
 ciphertexts = [bytes.fromhex(h) for h in raw]
 
-# Step 2: Use Message 13 (index 12) + known quote to calculate the secret key
-quote = "The Web as I envisaged it we have not seen it yet The future is still so much bigger than the past Tim Berners-Lee"
-key = [ciphertexts[12][p] ^ ord(quote[p]) for p in range(len(quote))]
-
-# Step 3: Decrypt every message using the recovered key
 for index, cipher in enumerate(ciphertexts, start=1):
     decrypted_chars = []
-    for p in range(len(cipher)):
-        if p < len(key):
-            decrypted_chars.append(chr(cipher[p] ^ key[p]))
-        else:
-            decrypted_chars.append("_")  # Underscore for positions beyond the key length
+    limit = min(len(cipher), len(key))
+    for p in range(limit):
+        decrypted_chars.append(chr(cipher[p] ^ key[p]))
 
     decrypted_text = "".join(decrypted_chars)
     print(f"Message {index}: {decrypted_text}\n")
