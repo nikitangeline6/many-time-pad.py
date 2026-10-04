@@ -1,0 +1,33 @@
+# Ciphertext and key (lists of digits)
+ciphertext = [6,6,4,7,5,1,9,2,7,4,9,2,0,2,8,7,8,4,9,4,2,4,1,4,6,6,8,5,4,2,
+              1,7,5,0,7,3,9,3,9,8,3,2,3,4,8,5,9,3,7,8,7,0,6,3,6]
+key = [6,6,1,5,3,7,7,1,8,5,1,0,8,0,0,5,4,9,3,7,4,8,1,5,9,8,3,2,7,1,
+       1,2,8,9,2,0,7,1,3,2,3,4,9,8,7,5,3,9,5,4,2,3,0,7,4]
+# add each ciphertext digit to the matching key digit,
+digits = ""
+for i in range(len(ciphertext)):
+    total = ciphertext[i] + key[i]
+    digits = digits + str(total % 10)
+print("Digits:", digits)
+# the checkerboard (digits -> letters)
+board = {
+    "0": "A", "1": "T", "3": "O", "4": "N",
+    "5": "E", "7": "S", "8": "I", "9": "R",
+    "20": "B", "21": "C", "22": "D", "23": "F", "24": "G",
+    "25": "H", "26": "J", "27": "K", "28": "L", "29": "M",
+    "60": "P", "61": "Q", "62": "U", "63": "V", "64": "W",
+    "65": "X", "66": "Y", "67": "Z", "68": ".", "69": "#"
+}
+# read the digits one by one
+message = ""
+i = 0
+while i < len(digits):
+    if digits[i] == "2" or digits[i] == "6":
+        # 2 and 6 start a two-digit code, so take two digits
+        code = digits[i] + digits[i + 1]
+        i = i + 2
+    else:
+        code = digits[i]
+        i = i + 1
+    message = message + board[code]
+print("Message:", message)
